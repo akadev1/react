@@ -25,6 +25,43 @@ type Props = {
   language: 'flow' | 'typescript';
 };
 
+function sanitizeInput(input: string): string {
+  const escapeChars: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;',
+    '{': '&#123;',
+    '}': '&#125;',
+    ':': '&#58;',
+    ';': '&#59;',
+    '(': '&#40;',
+    ')': '&#41;',
+    ',': '&#44;',
+    '.': '&#46;',
+    '%': '&#37;',
+    '$': '&#36;',
+    '@': '&#64;',
+    '=': '&#61;',
+    '+': '&#43;',
+    '-': '&#45;',
+    '_': '&#95;',
+    '#': '&#35;',
+    '!': '&#33;',
+    '*': '&#42;',
+    '?': '&#63;',
+    '\\': '&#92;',
+    '|': '&#124;',
+    '~': '&#126;',
+    '`': '&#96;',
+    '[': '&#91;',
+    ']': '&#93;',
+  };
+  return input.replace(/[&<>"'\/{}:;(),.%$@=+\-_#*!?\\|~`\[\]]/g, (char) => escapeChars[char] || char);
+}
+
 export default function Input({errors, language}: Props): JSX.Element {
   const [monaco, setMonaco] = useState<Monaco | null>(null);
   const store = useStore();
@@ -80,7 +117,7 @@ export default function Input({errors, language}: Props): JSX.Element {
     dispatchStore({
       type: 'updateFile',
       payload: {
-        source: value,
+        source: sanitizeInput(value),
       },
     });
   };

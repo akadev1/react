@@ -15,6 +15,7 @@ import {defaultStore} from '../lib/defaultStore';
 import {IconGitHub} from './Icons/IconGitHub';
 import Logo from './Logo';
 import {useStoreDispatch} from './StoreContext';
+import { sanitizeInput } from './Editor/Input';
 
 export default function Header(): JSX.Element {
   const [showCheck, setShowCheck] = useState(false);
@@ -36,7 +37,7 @@ export default function Header(): JSX.Element {
   };
 
   const handleShare: () => void = () => {
-    navigator.clipboard.writeText(location.href).then(() => {
+    navigator.clipboard.writeText(sanitizeInput(location.href)).then(() => {
       enqueueSnackbar('URL copied to clipboard');
       setShowCheck(true);
       // Show the check mark icon briefly after URL is copied
